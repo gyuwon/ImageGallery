@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace ImageGallery.Models
 {
     public class ImageContent
     {
         [Key]
-        public int ContentId { get; set; }
-        [Required]
+        public int Id { get; set; }
         public string UserId { get; set; }
-        [Required]
+        public virtual IdentityUser User { get; set; }
+        [Required, DataType(DataType.ImageUrl)]
         public string ImageUrl { get; set; }
         public string Description { get; set; }
     }

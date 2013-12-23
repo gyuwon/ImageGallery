@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Web.Http;
+using System.Web.Http.OData.Builder;
+using ImageGallery.Models;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 
@@ -28,6 +26,11 @@ namespace ImageGallery
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // OData API routes
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            builder.EntitySet<ImageContent>("ImageContents");
+            config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
         }
     }
 }
