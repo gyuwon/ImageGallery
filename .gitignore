@@ -152,3 +152,4 @@ $RECYCLE.BIN/
 
 *.mdf
 *.ldf
+/packages
