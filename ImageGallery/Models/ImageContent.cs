@@ -8,7 +8,7 @@ namespace ImageGallery.Models
         [Key]
         public int Id { get; set; }
         public string UserId { get; set; }
-        public virtual IdentityUser User { get; set; }
+        public virtual User User { get; set; }
         [Required, DataType(DataType.ImageUrl)]
         public string ImageUrl { get; set; }
         public string Description { get; set; }

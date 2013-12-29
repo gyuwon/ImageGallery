@@ -2,7 +2,7 @@
 
 namespace ImageGallery.Models
 {
-    public class ImageGalleryContext : IdentityDbContext<IdentityUser>
+    public class ImageGalleryContext : IdentityDbContext<User>
     {
         // You can add custom code to this file. Changes will not be overwritten.
         // 

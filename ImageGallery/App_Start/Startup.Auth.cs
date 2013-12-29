@@ -1,4 +1,5 @@
 ﻿using System;
+using ImageGallery.Models;
 using ImageGallery.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -15,7 +16,7 @@ namespace ImageGallery
         {
             PublicClientId = "self";
 
-            UserManagerFactory = () => new UserManager<IdentityUser>(new UserStore<IdentityUser>());
+            UserManagerFactory = () => new UserManager<User>(new UserStore<User>());
 
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
@@ -29,7 +30,7 @@ namespace ImageGallery
 
         public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
 
-        public static Func<UserManager<IdentityUser>> UserManagerFactory { get; set; }
+        public static Func<UserManager<User>> UserManagerFactory { get; set; }
 
         public static string PublicClientId { get; private set; }
 
