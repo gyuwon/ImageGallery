@@ -28,9 +28,10 @@ namespace ImageGallery
             );
 
             // OData API routes
-            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-            builder.EntitySet<ImageContent>("ImageContents");
-            config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
+            //ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            //builder.Entity<ImageContent>().Ignore(e => e.User);
+            //builder.EntitySet<ImageContent>("ImageContents");
+            //config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
         }
     }
 }

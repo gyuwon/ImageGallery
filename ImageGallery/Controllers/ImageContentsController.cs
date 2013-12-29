@@ -1,57 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
-using System.Web.Http.OData;
-using System.Web.Http.OData.Routing;
+using System.Web.Http.Description;
 using ImageGallery.Models;
 
 namespace ImageGallery.Controllers
 {
-    /*
-    To add a route for this controller, merge these statements into the Register method of the WebApiConfig class. Note that OData URLs are case sensitive.
-
-    using System.Web.Http.OData.Builder;
-    using ImageGallery.Models;
-    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<ImageContent>("ImageContents");
-    config.Routes.MapODataRoute("odata", "odata", builder.GetEdmModel());
-    */
-    [Authorize]
-    public class ImageContentsController : ODataController
+    public class ImageContentsController : ApiController
     {
         private ImageGalleryContext db = new ImageGalleryContext();
 
-        // GET odata/ImageContents
+        // GET api/ImageContents
         [Queryable]
         public IQueryable<ImageContent> GetImageContents()
         {
             return db.ImageContents;
         }
 
-        // GET odata/ImageContents(5)
-        [Queryable]
-        public SingleResult<ImageContent> GetImageContent([FromODataUri] int key)
+        // GET api/ImageContents/5
+        [ResponseType(typeof(ImageContent))]
+        public async Task<IHttpActionResult> GetImageContent(int id)
         {
-            return SingleResult.Create(db.ImageContents.Where(imagecontent => imagecontent.Id == key));
+            ImageContent imagecontent = await db.ImageContents.FindAsync(id);
+            if (imagecontent == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(imagecontent);
         }
 
-        // PUT odata/ImageContents(5)
-        public async Task<IHttpActionResult> Put([FromODataUri] int key, ImageContent imagecontent)
+        // PUT api/ImageContents/5
+        [Authorize]
+        public async Task<IHttpActionResult> PutImageContent(int id, ImageContent imagecontent)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (key != imagecontent.Id)
+            if (id != imagecontent.Id)
             {
                 return BadRequest();
             }
@@ -64,7 +55,7 @@ namespace ImageGallery.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ImageContentExists(key))
+                if (!ImageContentExists(id))
                 {
                     return NotFound();
                 }
@@ -74,11 +65,13 @@ namespace ImageGallery.Controllers
                 }
             }
 
-            return Updated(imagecontent);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST odata/ImageContents
-        public async Task<IHttpActionResult> Post(ImageContent imagecontent)
+        // POST api/ImageContents
+        [Authorize]
+        [ResponseType(typeof(ImageContent))]
+        public async Task<IHttpActionResult> PostImageContent(ImageContent imagecontent)
         {
             if (!ModelState.IsValid)
             {
@@ -88,49 +81,15 @@ namespace ImageGallery.Controllers
             db.ImageContents.Add(imagecontent);
             await db.SaveChangesAsync();
 
-            return Created(imagecontent);
+            return CreatedAtRoute("DefaultApi", new { id = imagecontent.Id }, imagecontent);
         }
 
-        // PATCH odata/ImageContents(5)
-        [AcceptVerbs("PATCH", "MERGE")]
-        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<ImageContent> patch)
+        // DELETE api/ImageContents/5
+        [Authorize]
+        [ResponseType(typeof(ImageContent))]
+        public async Task<IHttpActionResult> DeleteImageContent(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            ImageContent imagecontent = await db.ImageContents.FindAsync(key);
-            if (imagecontent == null)
-            {
-                return NotFound();
-            }
-
-            patch.Patch(imagecontent);
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ImageContentExists(key))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Updated(imagecontent);
-        }
-
-        // DELETE odata/ImageContents(5)
-        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
-        {
-            ImageContent imagecontent = await db.ImageContents.FindAsync(key);
+            ImageContent imagecontent = await db.ImageContents.FindAsync(id);
             if (imagecontent == null)
             {
                 return NotFound();
@@ -139,7 +98,7 @@ namespace ImageGallery.Controllers
             db.ImageContents.Remove(imagecontent);
             await db.SaveChangesAsync();
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(imagecontent);
         }
 
         protected override void Dispose(bool disposing)
@@ -151,9 +110,9 @@ namespace ImageGallery.Controllers
             base.Dispose(disposing);
         }
 
-        private bool ImageContentExists(int key)
+        private bool ImageContentExists(int id)
         {
-            return db.ImageContents.Count(e => e.Id == key) > 0;
+            return db.ImageContents.Count(e => e.Id == id) > 0;
         }
     }
 }
