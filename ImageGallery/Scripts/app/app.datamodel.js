@@ -10,7 +10,8 @@
         removeLoginUrl = "/api/Account/RemoveLogin",
         setPasswordUrl = "/api/Account/setPassword",
         siteUrl = "/",
-        userInfoUrl = "/api/Account/UserInfo";
+        userInfoUrl = "/api/Account/UserInfo",
+        imageContentsUrl = "api/ImageContents";
 
     // Route operations
     function externalLoginsUrl(returnUrl, generateState) {
@@ -169,6 +170,27 @@
         return $.ajax(setPasswordUrl, {
             type: "POST",
             data: data,
+            headers: getSecurityHeaders()
+        });
+    };
+
+    self.getImageContents = function () {
+        return $.ajax(imageContentsUrl, {
+            cache: false
+        });
+    };
+
+    self.postImageContent = function (data) {
+        return $.ajax(imageContentsUrl, {
+            type: "POST",
+            data: data,
+            headers: getSecurityHeaders()
+        });
+    };
+
+    self.removeImageContent = function (id) {
+        return $.ajax(imageContentsUrl + '/' + id, {
+            type: "DELETE",
             headers: getSecurityHeaders()
         });
     };

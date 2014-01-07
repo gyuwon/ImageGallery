@@ -112,7 +112,7 @@
         self.errors.removeAll();
 
         if (accessToken) {
-            dataModel.setAccessToken(accessToken, persistent)
+            dataModel.setAccessToken(accessToken, persistent);
         }
 
         self.user(new UserInfoViewModel(self, userName, dataModel));
@@ -201,8 +201,8 @@
             cleanUpLocation();
             dataModel.getUserInfo(fragment.access_token)
                 .done(function (data) {
-                    if (typeof (data.userName) !== "undefined" && typeof (data.hasRegistered) !== "undefined"
-                        && typeof (data.loginProvider) !== "undefined") {
+                    if (typeof (data.userName) !== "undefined" && typeof (data.hasRegistered) !== "undefined" &&
+                        typeof (data.loginProvider) !== "undefined") {
                         if (data.hasRegistered) {
                             self.navigateToLoggedIn(data.userName, fragment.access_token, false);
                         }
@@ -235,7 +235,7 @@
                     self.navigateToLogin();
                 });
         }
-    }
+    };
 }
 
 var app = new AppViewModel(new AppDataModel());

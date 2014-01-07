@@ -1,11 +1,14 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ImageGallery.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ImageGallery.Controllers
 {
@@ -15,9 +18,16 @@ namespace ImageGallery.Controllers
 
         // GET api/ImageContents
         [Queryable]
-        public IQueryable<ImageContent> GetImageContents()
+        public IQueryable<ImageContentViewModel> GetImageContents()
         {
-            return db.ImageContents;
+            return from e in db.ImageContents.Include(e => e.User)
+                   select new ImageContentViewModel
+                   {
+                       Id = e.Id,
+                       ImageUrl = e.ImageUrl,
+                       Description = e.Description,
+                       UserName = e.User.UserName
+                   };
         }
 
         // GET api/ImageContents/5
@@ -35,19 +45,21 @@ namespace ImageGallery.Controllers
 
         // PUT api/ImageContents/5
         [Authorize]
-        public async Task<IHttpActionResult> PutImageContent(int id, ImageContent imagecontent)
+        public async Task<IHttpActionResult> PutImageContent(int id, ImageContent content)
         {
+            throw new NotImplementedException();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != imagecontent.Id)
+            if (id != content.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(imagecontent).State = EntityState.Modified;
+            db.Entry(content).State = EntityState.Modified;
 
             try
             {
@@ -71,17 +83,19 @@ namespace ImageGallery.Controllers
         // POST api/ImageContents
         [Authorize]
         [ResponseType(typeof(ImageContent))]
-        public async Task<IHttpActionResult> PostImageContent(ImageContent imagecontent)
+        public async Task<IHttpActionResult> PostImageContent(ImageContent content)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.ImageContents.Add(imagecontent);
+            content.UserId = this.User.Identity.GetUserId();
+
+            db.ImageContents.Add(content);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = imagecontent.Id }, imagecontent);
+            return CreatedAtRoute("DefaultApi", new { id = content.Id }, content);
         }
 
         // DELETE api/ImageContents/5
@@ -89,16 +103,21 @@ namespace ImageGallery.Controllers
         [ResponseType(typeof(ImageContent))]
         public async Task<IHttpActionResult> DeleteImageContent(int id)
         {
-            ImageContent imagecontent = await db.ImageContents.FindAsync(id);
-            if (imagecontent == null)
+            ImageContent content = await db.ImageContents.FindAsync(id);
+
+            var userId = this.User.Identity.GetUserId();
+            if (content.UserId != userId)
+                return Unauthorized();
+
+            if (content == null)
             {
                 return NotFound();
             }
 
-            db.ImageContents.Remove(imagecontent);
+            db.ImageContents.Remove(content);
             await db.SaveChangesAsync();
 
-            return Ok(imagecontent);
+            return Ok(content);
         }
 
         protected override void Dispose(bool disposing)

@@ -232,7 +232,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\ImageContent.cs" />
+    <Compile Include="Models\ImageContentModels.cs" />
     <Compile Include="Models\ImageGalleryContext.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -270,6 +270,8 @@
     <Content Include="Scripts\knockout.validation.debug.js" />
     <Content Include="Scripts\knockout.validation.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\q.js" />
+    <Content Include="Scripts\q.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
