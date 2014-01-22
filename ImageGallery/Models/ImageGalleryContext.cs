@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using System.Data.Entity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace ImageGallery.Models
 {
@@ -17,6 +18,7 @@ namespace ImageGallery.Models
             this.Database.Log += message => System.Diagnostics.Debug.WriteLine(message);
         }
 
-        public System.Data.Entity.DbSet<ImageGallery.Models.ImageContent> ImageContents { get; set; }
+        public DbSet<ImageContent> ImageContents { get; set; }
+        public DbSet<ImageContentComment> ImageContentComments { get; set; }
     }
 }
