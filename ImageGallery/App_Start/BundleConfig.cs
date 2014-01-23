@@ -17,12 +17,6 @@ namespace ImageGallery
                 "~/Scripts/knockout-{version}.js",
                 "~/Scripts/knockout.validation.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/q").Include(
-                "~/Scripts/q.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/breeze").Include(
-                "~/Scripts/breeze.debug.js"));
-
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                 "~/Scripts/app/ajaxPrefilters.js",
                 "~/Scripts/app/app.bindings.js",
