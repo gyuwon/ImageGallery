@@ -7,26 +7,34 @@ namespace ImageGallery.Models
 {
     public abstract class ImageContentModelBase
     {
-        [Key]
-        public int Id { get; set; }
         [Required, DataType(DataType.ImageUrl)]
         public string ImageUrl { get; set; }
         public string Description { get; set; }
     }
 
-    public class ImageContent : ImageContentModelBase
+    public class ImageContentBindingModel : ImageContentModelBase
     {
-        public string UserId { get; set; }
+    }
+
+    public class ImageContentEntityBase : ImageContentModelBase
+    {
+        [Key]
+        public int Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
 
-        public virtual User User { get; set; }
         public virtual ICollection<ImageContentComment> Comments { get; set; }
     }
 
-    public class ImageContentViewModel : ImageContentModelBase
+    public class ImageContent : ImageContentEntityBase
     {
         [Required]
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
+    }
+
+    public class ImageContentViewModel : ImageContentEntityBase
+    {
         public string UserName { get; set; }
     }
 }

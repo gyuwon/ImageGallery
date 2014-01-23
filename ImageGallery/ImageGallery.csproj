@@ -225,9 +225,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201401221607014_Init.cs" />
-    <Compile Include="Migrations\201401221607014_Init.Designer.cs">
-      <DependentUpon>201401221607014_Init.cs</DependentUpon>
+    <Compile Include="Migrations\201401230401089_Init.cs" />
+    <Compile Include="Migrations\201401230401089_Init.Designer.cs">
+      <DependentUpon>201401230401089_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -264,6 +264,9 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <None Include="Scripts\breeze.intellisense.js" />
+    <Content Include="Scripts\breeze.debug.js" />
+    <Content Include="Scripts\breeze.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\knockout-2.3.0.debug.js" />
@@ -320,8 +323,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201401221607014_Init.resx">
-      <DependentUpon>201401221607014_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201401230401089_Init.resx">
+      <DependentUpon>201401230401089_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

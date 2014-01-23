@@ -175,7 +175,7 @@
     };
 
     self.getImageContents = function () {
-        return $.ajax(imageContentsUrl, {
+        return $.ajax(imageContentsUrl + '?$orderby=Updated desc', {
             cache: false
         });
     };

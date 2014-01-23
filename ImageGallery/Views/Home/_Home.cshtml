@@ -28,7 +28,9 @@
             <div class="panel-heading">
                 <p><span data-bind="text: userName"></span></p>
                 <p><span data-bind="text: description"></span></p>
-                <p data-bind="if: isOwned()">
+                <p><span>Created: </span><span data-bind="text: createdLocal"></span></p>
+                <p><span>Updated: </span><span data-bind="text: updatedLocal"></span></p>
+                <p data-bind="if: isOwned">
                     <a href="#" data-bind="click: remove">Delete</a>
                 </p>
             </div>

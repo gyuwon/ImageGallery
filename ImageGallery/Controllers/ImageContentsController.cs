@@ -20,13 +20,15 @@ namespace ImageGallery.Controllers
         [Queryable]
         public IQueryable<ImageContentViewModel> GetImageContents()
         {
-            return from e in db.ImageContents.Include(e => e.User)
+            return from e in db.ImageContents
                    select new ImageContentViewModel
                    {
                        Id = e.Id,
                        ImageUrl = e.ImageUrl,
                        Description = e.Description,
-                       UserName = e.User.UserName
+                       UserName = e.User.UserName,
+                       Created = e.Created,
+                       Updated = e.Updated
                    };
         }
 
@@ -83,19 +85,27 @@ namespace ImageGallery.Controllers
         // POST api/ImageContents
         [Authorize]
         [ResponseType(typeof(ImageContent))]
-        public async Task<IHttpActionResult> PostImageContent(ImageContent content)
+        public async Task<IHttpActionResult> PostImageContent(ImageContentBindingModel content)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            content.UserId = this.User.Identity.GetUserId();
+            DateTime now = DateTime.Now.ToUniversalTime();
+            ImageContent entity = new ImageContent
+            {
+                UserId = this.User.Identity.GetUserId(),
+                ImageUrl = content.ImageUrl,
+                Description = content.Description,
+                Created = now,
+                Updated = now
+            };
 
-            db.ImageContents.Add(content);
+            db.ImageContents.Add(entity);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = content.Id }, content);
+            return CreatedAtRoute("DefaultApi", new { id = entity.Id }, content);
         }
 
         // DELETE api/ImageContents/5

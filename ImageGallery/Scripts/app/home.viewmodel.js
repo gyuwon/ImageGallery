@@ -3,13 +3,33 @@
 function HomeViewModel(app, dataModel) {
     var self = this;
 
+    var UTC = function (date) {
+        return Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds(),
+            date.getMilliseconds());
+    };
+
     var fetch = function () {
         dataModel.getImageContents().done(function (data) {
             for (var i in data) {
-                data[i].isOwned = function () {
+                var content = data[i];
+                content.isOwned = ko.computed(function () {
                     return app.user().name() === this.userName;
-                };
-                data[i].remove = function () {
+                }, content);
+                content.createdLocal = ko.computed(function () {
+                    var date = new Date(UTC(new Date(this.created)));
+                    return date.toDateString();
+                }, content);
+                content.updatedLocal = ko.computed(function () {
+                    var date = new Date(UTC(new Date(this.updated)));
+                    return date.toDateString();
+                }, content);
+                content.remove = function () {
                     dataModel.removeImageContent(this.id).done(function () {
                         setTimeout(fetch);
                     });
