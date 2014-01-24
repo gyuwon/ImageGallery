@@ -229,6 +229,10 @@
     <Compile Include="Migrations\201401230401089_Init.Designer.cs">
       <DependentUpon>201401230401089_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401240553290_ImageContentId_Required.cs" />
+    <Compile Include="Migrations\201401240553290_ImageContentId_Required.Designer.cs">
+      <DependentUpon>201401240553290_ImageContentId_Required.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -266,8 +270,10 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <Content Include="Scripts\knockout-2.3.0.debug.js" />
-    <Content Include="Scripts\knockout-2.3.0.js" />
+    <Content Include="Scripts\knockout-3.0.0.debug.js" />
+    <Content Include="Scripts\knockout-3.0.0.js" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\knockout.validation.debug.js" />
     <Content Include="Scripts\knockout.validation.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
@@ -322,6 +328,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201401230401089_Init.resx">
       <DependentUpon>201401230401089_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401240553290_ImageContentId_Required.resx">
+      <DependentUpon>201401240553290_ImageContentId_Required.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

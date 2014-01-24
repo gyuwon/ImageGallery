@@ -31,7 +31,7 @@ namespace ImageGallery.Migrations
             User user = new User
             {
                 Id = "ebc2c948-bac3-4cd4-9e1b-a08121d0ec98",
-                UserName = "gyuwon",
+                UserName = "Gyuwon",
                 PasswordHash = "AIBcwtGNCZJiH9owKu6znsFRdMBZ/HvCBGxPX2LUnXhSSLpZZ/WQeREnxaDwKbcTwg==",
                 SecurityStamp = "c9031ce9-0d78-4020-8106-623e735ff847"
             };

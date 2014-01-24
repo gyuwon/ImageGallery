@@ -2,13 +2,13 @@
     var self = this,
         // Routes
         addExternalLoginUrl = "/api/Account/AddExternalLogin",
-        changePasswordUrl = "/api/Account/changePassword",
+        changePasswordUrl = "/api/Account/ChangePassword",
         loginUrl = "/Token",
         logoutUrl = "/api/Account/Logout",
         registerUrl = "/api/Account/Register",
         registerExternalUrl = "/api/Account/RegisterExternal",
         removeLoginUrl = "/api/Account/RemoveLogin",
-        setPasswordUrl = "/api/Account/setPassword",
+        setPasswordUrl = "/api/Account/SetPassword",
         siteUrl = "/",
         userInfoUrl = "/api/Account/UserInfo",
         imageContentsUrl = "api/ImageContents";
@@ -175,7 +175,7 @@
     };
 
     self.getImageContents = function () {
-        return $.ajax(imageContentsUrl + '?$orderby=Updated desc', {
+        return $.ajax(imageContentsUrl + '?$top=12&$orderby=Updated desc', {
             cache: false
         });
     };
@@ -193,5 +193,20 @@
             type: "DELETE",
             headers: getSecurityHeaders()
         });
+    };
+
+    self.postImageContentComment = function (id, comment) {
+        return $.ajax(imageContentsUrl + '/' + id + '/Comments', {
+            type: "POST",
+            data: { CommentText: comment },
+            headers: getSecurityHeaders()
+        });
+    }
+
+    self.removeImageContentComment = function (id) {
+        return $.ajax(imageContentsUrl + '/Comments/' + id, {
+            type: "DELETE",
+            headers: getSecurityHeaders()
+        })
     };
 }
