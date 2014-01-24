@@ -15,6 +15,7 @@ namespace ImageGallery
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                 "~/Scripts/knockout-{version}.js",
+                "~/Scripts/knockout.mapping-latest.js",
                 "~/Scripts/knockout.validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(

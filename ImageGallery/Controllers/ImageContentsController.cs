@@ -2,7 +2,6 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -20,15 +19,26 @@ namespace ImageGallery.Controllers
         [Queryable]
         public IQueryable<ImageContentViewModel> GetImageContents()
         {
-            return from e in db.ImageContents
+            return from content in db.ImageContents
+                   let comments = from comment in content.Comments
+                                  select new ImageContentCommentViewModel
+                                  {
+                                      Id = comment.Id,
+                                      ImageContentId = content.Id,
+                                      UserName = comment.User.UserName,
+                                      CommentText = comment.CommentText,
+                                      Created = comment.Created,
+                                      Updated = comment.Updated
+                                  }
                    select new ImageContentViewModel
                    {
-                       Id = e.Id,
-                       ImageUrl = e.ImageUrl,
-                       Description = e.Description,
-                       UserName = e.User.UserName,
-                       Created = e.Created,
-                       Updated = e.Updated
+                       Id = content.Id,
+                       ImageUrl = content.ImageUrl,
+                       Description = content.Description,
+                       UserName = content.User.UserName,
+                       Created = content.Created,
+                       Updated = content.Updated,
+                       Comments = comments.ToList()
                    };
         }
 
@@ -84,7 +94,7 @@ namespace ImageGallery.Controllers
 
         // POST api/ImageContents
         [Authorize]
-        [ResponseType(typeof(ImageContent))]
+        [ResponseType(typeof(ImageContentViewModel))]
         public async Task<IHttpActionResult> PostImageContent(ImageContentBindingModel content)
         {
             if (!ModelState.IsValid)
@@ -105,29 +115,125 @@ namespace ImageGallery.Controllers
             db.ImageContents.Add(entity);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = entity.Id }, content);
+            return CreatedAtRoute("DefaultApi", new { id = entity.Id }, new ImageContentViewModel
+            {
+                Id = entity.Id,
+                UserName = this.User.Identity.Name,
+                ImageUrl = entity.ImageUrl,
+                Description = entity.Description,
+                Created = entity.Created,
+                Updated = entity.Updated
+            });
         }
 
         // DELETE api/ImageContents/5
         [Authorize]
-        [ResponseType(typeof(ImageContent))]
         public async Task<IHttpActionResult> DeleteImageContent(int id)
         {
             ImageContent content = await db.ImageContents.FindAsync(id);
-
-            var userId = this.User.Identity.GetUserId();
-            if (content.UserId != userId)
-                return Unauthorized();
 
             if (content == null)
             {
                 return NotFound();
             }
 
+            var userId = this.User.Identity.GetUserId();
+            if (content.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
             db.ImageContents.Remove(content);
             await db.SaveChangesAsync();
 
-            return Ok(content);
+            return Ok();
+        }
+
+        // GET api/ImageContents/{id}/Comments
+        [HttpGet]
+        [Route("api/ImageContents/{id:int}/Comments")]
+        [Queryable]
+        public IQueryable<ImageContentCommentViewModel> GetComments(int id)
+        {
+            return from e in db.ImageContentComments
+                   where e.ImageContentId == id
+                   select new ImageContentCommentViewModel
+                   {
+                       Id = e.Id,
+                       ImageContentId = e.ImageContentId,
+                       UserName = e.User.UserName,
+                       CommentText = e.CommentText,
+                       Created = e.Created,
+                       Updated = e.Updated
+                   };
+        }
+
+        // GET api/ImageContents/Comments/{id}
+        [HttpGet]
+        [Route("api/ImageContents/Comments/{id:int}", Name = "GetImageContentComment")]
+        public async Task<ImageContentCommentViewModel> GetComment(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        // POST api/ImageContents/{id}/Comments
+        [Authorize]
+        [HttpPost]
+        [Route("api/ImageContents/{id:int}/Comments")]
+        [ResponseType(typeof(ImageContentCommentViewModel))]
+        public async Task<IHttpActionResult> PostComment(int id, ImageContentCommentBindingModel comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DateTime now = DateTime.Now.ToUniversalTime();
+            ImageContentComment entity = new ImageContentComment
+            {
+                UserId = this.User.Identity.GetUserId(),
+                ImageContentId = id,
+                CommentText = comment.CommentText,
+                Created = now,
+                Updated = now
+            };
+
+            db.ImageContentComments.Add(entity);
+            await db.SaveChangesAsync();
+
+            return CreatedAtRoute("GetImageContentComment", new { id = entity.Id }, new ImageContentCommentViewModel
+            {
+                Id = entity.Id,
+                UserName = this.User.Identity.Name,
+                ImageContentId = entity.ImageContentId,
+                CommentText = entity.CommentText,
+                Created = entity.Created,
+                Updated = entity.Updated
+            });
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("api/ImageContents/Comments/{id:int}")]
+        public async Task<IHttpActionResult> DeleteComment(int id)
+        {
+            ImageContentComment comment = await db.ImageContentComments.FindAsync(id);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            var userId = this.User.Identity.GetUserId();
+            if (comment.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            db.ImageContentComments.Remove(comment);
+            await db.SaveChangesAsync();
+
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)

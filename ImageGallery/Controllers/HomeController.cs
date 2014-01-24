@@ -9,6 +9,11 @@ namespace ImageGallery.Controllers
     {
         public ActionResult Index()
         {
+            if (this.Request.Path != "/")
+            {
+                return Redirect("/");
+            }
+
             return View();
         }
     }

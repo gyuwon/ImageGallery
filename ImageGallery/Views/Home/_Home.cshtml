@@ -5,13 +5,13 @@
         <div class="form-group">
             <label for="NewImageUrl" class="col-sm-2 control-label">URL</label>
             <div class="col-sm-10">
-                <input type="url" id="NewImageUrl" class="form-control" placeholder="URL" data-bind="value: url" />
+                <input type="url" id="NewImageUrl" class="form-control" placeholder="URL" data-bind="value: url, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="form-group">
             <label for="NewImageDescription" class="col-sm-2 control-label">Description</label> 
             <div class="col-sm-10">
-                <input type="text" id="NewImageDescription" class="form-control" placeholder="Description" data-bind="value: description" />
+                <input type="text" id="NewImageDescription" class="form-control" placeholder="Description" data-bind="value: description, valueUpdate: 'afterkeydown'" />
             </div>
         </div>
         <div class="form-group">
@@ -23,7 +23,7 @@
 </div>
 
 <div class="row" data-bind="foreach: contents">
-    <div class="col-xs-6 col-sm-3">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <p><span data-bind="text: userName"></span></p>
@@ -36,6 +36,26 @@
             </div>
             <div class="panel-body">
                 <img class="img-responsive" data-bind="attr: { src: imageUrl }" />
+            </div>
+            <div class="panel-footer">
+                <div data-bind="foreach: comments">
+                    <div>
+                        <p>
+                            <span data-bind="text: userName"></span>
+                            <span data-bind="if: isOwned">
+                                <button type="button" class="btn btn-default btn-xs" data-bind="click: remove">
+                                    <span class="glyphicon glyphicon-remove"></span>Remove
+                                </button>
+                            </span>
+                            <blockquote data-bind="text: commentText"></blockquote>
+                        </p>
+                    </div>
+                </div>
+                <div data-bind="with: addComment">
+                    <form data-bind="submit: add">
+                        <input type="text" class="form-control" placeholder="Write a comment..." data-bind="value: comment, valueUpdate: 'afterkeydown'" />
+                    </form>
+                </div>
             </div>
         </div>
     </div>
